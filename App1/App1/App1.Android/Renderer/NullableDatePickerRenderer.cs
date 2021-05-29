@@ -30,7 +30,8 @@ namespace App1.Droid.Renderer
         private void Dialog_DateSet(object sender, DatePickerDialog.DateSetEventArgs e)
         {
             var view = (NullableDatePicker)Element;
-            view.NullableDate = view.Date;
+            view.NullableDate = e.Date;
+            SetNullableText(view);
         }
 
         protected override void OnElementChanged(ElementChangedEventArgs<DatePicker> e)

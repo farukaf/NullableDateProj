@@ -21,7 +21,7 @@
         <DatePicker Format="yyyy-MM-dd" />
 
 
-        <Label>NUllable DatePicker</Label>
+        <Label>Nullable DatePicker</Label>
         <!--You can set or bind to NullableDate property-->
         <controls:NullableDatePicker 
             Placeholder="Tap Date" 

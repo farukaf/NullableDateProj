@@ -70,8 +70,12 @@ namespace App1.Controls
             {
                 if (value != NullableDate)
                 {
+                    //this will reset the default value of date...
+                    if (!value.HasValue) Date = DateTime.Today;
+
                     SetValue(NullableDateProperty, value);
-                    UpdateDate();
+                    if (value.HasValue) UpdateDate();
+                    
                 }
             }
         }
@@ -122,6 +126,7 @@ namespace App1.Controls
         protected override void OnPropertyChanged(string propertyName = null)
         {
             base.OnPropertyChanged(propertyName);
+             
 
             if (propertyName == DateProperty.PropertyName)
             {
