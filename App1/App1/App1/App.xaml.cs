@@ -1,6 +1,8 @@
 ﻿using App1.Services;
 using App1.Views;
 using System;
+using System.Globalization;
+using System.Threading;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -15,6 +17,11 @@ namespace App1
 
             DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
+
+            var ci = new CultureInfo("pt-BR");
+            Thread.CurrentThread.CurrentCulture = ci;
+            Thread.CurrentThread.CurrentUICulture = ci;
+            CultureInfo.DefaultThreadCurrentCulture = ci;
         }
 
         protected override void OnStart()

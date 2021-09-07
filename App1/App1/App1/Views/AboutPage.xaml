@@ -5,14 +5,16 @@
              xmlns:vm="clr-namespace:App1.ViewModels"
              xmlns:controls="clr-namespace:App1.Controls"
              Title="{Binding Title}">
-    
+
     <ContentPage.BindingContext>
         <vm:AboutViewModel />
     </ContentPage.BindingContext>
-    
+
     <ContentPage.Resources>
         <ResourceDictionary>
             <Color x:Key="Accent">#96d1ff</Color>
+            <controls:DecimalConverter x:Key="DecimalConverter" />
+            <controls:CurrencyConverter x:Key="CurrencyConverter" />
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -23,15 +25,21 @@
 
         <Label>Nullable DatePicker</Label>
         <!--You can set or bind to NullableDate property-->
-        <controls:NullableDatePicker 
-            Placeholder="Tap Date" 
-            Format="yyyy-MM-dd" 
-            x:Name="dtPickerNull" />
+        <controls:NullableDatePicker Placeholder="Tap Date"
+                                     Format="yyyy-MM-dd"
+                                     x:Name="dtPickerNull" />
 
-        <Button Text="Clear Date" Clicked="Button_Clicked" />
+        <Button Text="Clear Date"
+                Clicked="Button_Clicked" />
 
-        
-        
+
+        <Frame Padding="5" Margin="5" BackgroundColor="#EAEAEA">
+            <Entry Text="{Binding DecimalBinder, Converter={StaticResource CurrencyConverter}, ConverterParameter={x:Reference Name=etCurrecy}}"
+                   x:Name="etCurrecy"
+                   Keyboard="Numeric" />
+        </Frame>
+ 
+
     </StackLayout>
 
 </ContentPage>

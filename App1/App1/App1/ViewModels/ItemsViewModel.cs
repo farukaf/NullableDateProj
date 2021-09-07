@@ -17,6 +17,10 @@ namespace App1.ViewModels
         public Command AddItemCommand { get; }
         public Command<Item> ItemTapped { get; }
 
+        public ObservableCollection<TabViewModel> ListStatusTabs { get; set; }
+
+        public TabViewModel SelectedTab { get; set; }
+
         public ItemsViewModel()
         {
             Title = "Browse";
@@ -26,9 +30,18 @@ namespace App1.ViewModels
             ItemTapped = new Command<Item>(OnItemSelected);
 
             AddItemCommand = new Command(OnAddItem);
+
+            ListStatusTabs = new ObservableCollection<TabViewModel>()
+            {
+                new TabViewModel(){ Name = "Todas", IsSelected = true },
+                new TabViewModel(){ Name = "Aguardando" },
+                new TabViewModel(){ Name = "Emitidas" },
+                new TabViewModel(){ Name = "Autorizadas" },
+                new TabViewModel(){ Name = "Canceladas" },
+            };
         }
 
-        async Task ExecuteLoadItemsCommand()
+        public async Task ExecuteLoadItemsCommand()
         {
             IsBusy = true;
 
@@ -74,11 +87,11 @@ namespace App1.ViewModels
 
         async void OnItemSelected(Item item)
         {
-            if (item == null)
-                return;
+            //if (item == null)
+            //    return;
 
-            // This will push the ItemDetailPage onto the navigation stack
-            await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
+            //// This will push the ItemDetailPage onto the navigation stack
+            //await Shell.Current.GoToAsync($"{nameof(ItemDetailPage)}?{nameof(ItemDetailViewModel.ItemId)}={item.Id}");
         }
     }
 }

@@ -3,42 +3,133 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="App1.Views.ItemsPage"
              Title="{Binding Title}"
-             xmlns:local="clr-namespace:App1.ViewModels"  
-             xmlns:model="clr-namespace:App1.Models"  
+             xmlns:local="clr-namespace:App1.ViewModels"
+             xmlns:model="clr-namespace:App1.Models"
              x:Name="BrowseItemsPage">
 
+    <ContentPage.BindingContext>
+        <local:ItemsViewModel />
+    </ContentPage.BindingContext>
+
     <ContentPage.ToolbarItems>
-        <ToolbarItem Text="Add" Command="{Binding AddItemCommand}" />
+        <ToolbarItem Text="Add"
+                     Command="{Binding AddItemCommand}" />
     </ContentPage.ToolbarItems>
+
     <!--
       x:DataType enables compiled bindings for better performance and compile time validation of binding expressions.
       https://docs.microsoft.com/xamarin/xamarin-forms/app-fundamentals/data-binding/compiled-bindings
     -->
-    <RefreshView x:DataType="local:ItemsViewModel" Command="{Binding LoadItemsCommand}" IsRefreshing="{Binding IsBusy, Mode=TwoWay}">
-        <CollectionView x:Name="ItemsListView"
-                ItemsSource="{Binding Items}"
-                SelectionMode="None">
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout Padding="10" x:DataType="model:Item">
-                        <Label Text="{Binding Text}" 
-                            LineBreakMode="NoWrap" 
-                            Style="{DynamicResource ListItemTextStyle}" 
-                            FontSize="16" />
-                        <Label Text="{Binding Description}" 
-                            LineBreakMode="NoWrap"
-                            Style="{DynamicResource ListItemDetailTextStyle}"
-                            FontSize="13" />
-                        <StackLayout.GestureRecognizers>
-                            <TapGestureRecognizer 
-                                NumberOfTapsRequired="1"
-                                Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"		
-                                CommandParameter="{Binding .}">
-                            </TapGestureRecognizer>
-                        </StackLayout.GestureRecognizers>
+
+    <ContentPage.Content>
+        <Grid>
+
+            <Grid.GestureRecognizers>
+                <SwipeGestureRecognizer Direction="Right"
+                                        Swiped="Right_Swiped" />
+                <SwipeGestureRecognizer Direction="Left"
+                                        Swiped="Left_Swiped" />
+            </Grid.GestureRecognizers>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Frame Grid.Row="0"
+                   Padding="0"
+                   BackgroundColor="Transparent"
+                   BorderColor="#CCC"
+                   Margin="-1,-1,-1,0"
+                   HasShadow="False">
+                <ScrollView HorizontalScrollBarVisibility="Default"
+                            VerticalScrollBarVisibility="Never"
+                            Orientation="Horizontal"
+                            BackgroundColor="#EEF"
+                            Margin="0,-1,0,1"
+                            HorizontalOptions="FillAndExpand"
+                            HeightRequest="44">
+                    <StackLayout BindableLayout.ItemsSource="{Binding ListStatusTabs}"
+                                 Orientation="Horizontal"
+                                 HorizontalOptions="CenterAndExpand">
+                        <BindableLayout.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="5,8,5,0"
+                                      Opacity="{Binding NameOpacity}">
+                                    <Grid.GestureRecognizers>
+                                        <TapGestureRecognizer Tapped="TapTabStatus_Tapped" />
+                                    </Grid.GestureRecognizers>
+                                    <Label FontSize="Medium"
+                                           Text="{Binding Name}"
+                                           FontAttributes="Bold"
+                                           VerticalOptions="Start"
+                                           LineBreakMode="NoWrap"
+                                           HorizontalOptions="Center"
+                                           Margin="10,5,10,0" />
+                                    <BoxView IsVisible="{Binding IsSelected}"
+                                             VerticalOptions="End"
+                                             HeightRequest="4"
+                                             BackgroundColor="#003" />
+                                </Grid>
+                            </DataTemplate>
+                        </BindableLayout.ItemTemplate>
                     </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-    </RefreshView>
+                </ScrollView>
+            </Frame>
+
+            <ListView x:Name="ItemsListView"
+                      Grid.Row="1"
+                      RowHeight="64"  
+                      ItemsSource="{Binding Items}"
+                      SelectionMode="None">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ContentView Padding="5"
+                                         x:DataType="model:Item">
+                                <Frame CornerRadius="5"
+                                       Margin="0"
+                                       Padding="0"
+                                       IsClippedToBounds="True"
+                                       BackgroundColor="White"
+                                       BorderColor="#CCC">
+                                    <StackLayout Padding="5">
+                                        <Label Text="{Binding Text}"
+                                               LineBreakMode="NoWrap"
+                                               Style="{DynamicResource ListItemTextStyle}"
+                                               FontSize="16" />
+                                        <Label Text="{Binding Description}"
+                                               LineBreakMode="NoWrap"
+                                               Style="{DynamicResource ListItemDetailTextStyle}"
+                                               FontSize="13" />
+                                    </StackLayout>
+                                </Frame>
+                                <ContentView.GestureRecognizers>
+                                    <TapGestureRecognizer NumberOfTapsRequired="1"
+                                                          Command="{Binding Source={RelativeSource AncestorType={x:Type local:ItemsViewModel}}, Path=ItemTapped}"
+                                                          CommandParameter="{Binding .}">
+                                    </TapGestureRecognizer>
+                                </ContentView.GestureRecognizers>
+                            </ContentView>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                <ListView.Footer>
+                    <Grid BackgroundColor="Transparent">
+                        
+                        <Grid.GestureRecognizers>
+                            <SwipeGestureRecognizer Direction="Right"
+                                                    Swiped="Right_Swiped" />
+                            <SwipeGestureRecognizer Direction="Left"
+                                                    Swiped="Left_Swiped" />
+                        </Grid.GestureRecognizers>
+
+
+                        <BoxView BackgroundColor="Yellow" x:Name="ListViewFiller"  />
+                    </Grid>
+                </ListView.Footer>
+            </ListView>
+
+        </Grid>
+    </ContentPage.Content>
 </ContentPage>
